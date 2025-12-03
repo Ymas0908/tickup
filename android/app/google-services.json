@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "654929189360",
+    "project_id": "tickup-301125",
+    "storage_bucket": "tickup-301125.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:654929189360:android:e1d94f54e14ace713e6535",
+        "android_client_info": {
+          "package_name": "com.tickup.tickup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGR_BEk6kLAjDHQ9oKsQ44AfX5bVksTNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
