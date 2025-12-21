@@ -1,15 +1,18 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickup/ressources/utils/secure_storage.dart';
 import 'package:tickup/views/acccueil/home.dart';
 import 'package:tickup/views/authentification/connexion_view.dart';
 import 'package:tickup/views_models/evenements/evenement_viewmodel.dart';
+import 'package:tickup/views_models/paiements/paiement_pro_view_model.dart';
 import 'package:tickup/web_services/implementations/evenement_impl.dart';
-import 'package:tickup/web_services/services/evenements/evenements_service.dart';
+import 'package:tickup/web_services/implementations/paiement_impl.dart';
 
 import 'firebase_options.dart';
+import 'ressources/utils/secure_storage.dart';
 
 Future<void> main() async {
   await initializeSecureStorage();
@@ -40,6 +43,9 @@ class TickUpApp extends StatelessWidget {
         // Fournit EvenementsViewModel. Les données seront accessibles partout.
         ChangeNotifierProvider(
           create: (_) => EvenementViewModel(evenementService: EvenementImpl()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PaiementViewModel(paiementService: PaiementImpl()),
         ),
         // Ajoutez d'autres ViewModels ici si nécessaire (ex: AuthViewModel())
       ],
