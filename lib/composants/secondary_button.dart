@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tickup/ressources/const/app_colors.dart';
 
-import '../ressources/const/const.dart';
 
 class SecondaryButton extends StatelessWidget {
   SecondaryButton({super.key, required this.title, this.onPressed});

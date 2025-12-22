@@ -27,8 +27,9 @@ dependencies:
 
 
   flutter_screenutil: ^5.9.3
-  flutter_skeleton_ui: ^0.0.6
   http: ^1.4.0
+  flutter_skeleton_ui: ^0.0.6
+
   flutter_contacts: ^1.1.9+2
   go_router: ^16.0.0
 

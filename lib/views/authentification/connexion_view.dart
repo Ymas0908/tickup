@@ -48,11 +48,11 @@ class _ConnexionViewState extends State<ConnexionView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Logo
-              Image.asset(
-                'assets/images/logo_horizontal_1.png',
-                width: 171,
-                height: 50,
-              ),
+              // Image.asset(
+              //   'assets/images/logo_horizontal_1.png',
+              //   width: 171,
+              //   height: 50,
+              // ),
 
               const SizedBox(height: 50),
 
