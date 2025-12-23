@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tickup/views_models/evenements/evenement_viewmodel.dart';
+import 'package:tickup/views_models/paiements/paiement_pro_view_model.dart';
 
 import '../models/enum/type_ticket.dart';
 
@@ -16,6 +17,7 @@ class _ShowDetailTicketState extends State<ShowDetailTicket> {
 
   int ticketQuantity = 1;
   late EvenementViewModel viewModel;
+  late PaiementViewModel paiementViewModel;
 
   // void _reserveTicket() {
   //   Navigator.pop(context); // Ferme le BottomSheet par exemple
@@ -138,7 +140,10 @@ class _ShowDetailTicketState extends State<ShowDetailTicket> {
             // Bouton réserver
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  paiementViewModel = Provider.of<PaiementViewModel>(context, listen: false);
+                  paiementViewModel.initPaiement();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xffD9AFA0),
                   padding:

@@ -97,7 +97,8 @@ class _HomeState extends State<Home> {
                       onChanged: (value) {
                         // evenementVm.searchEvents(value);
                       },
-                    ),                    const SizedBox(height: 20),
+                    ),
+                    const SizedBox(height: 20),
 
                     // SECTION TITLE
                     Row(
