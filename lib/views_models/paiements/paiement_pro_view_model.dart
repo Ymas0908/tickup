@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tickup/models/Request/genuis_pay_request.dart';
 import 'package:tickup/models/enum/Payement_methode.dart';
+import 'package:tickup/ressources/utils/log_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/request/paiement_pro_request.dart';
@@ -11,6 +12,7 @@ class PaiementViewModel extends ChangeNotifier {
 
   PaiementViewModel({required this.paiementService,});
 
+  final TextEditingController amountController = TextEditingController();
   bool isLoading = false;
   String paymentUrl = '';
   String errorMessage = '';
@@ -33,40 +35,21 @@ class PaiementViewModel extends ChangeNotifier {
       );
 
       final response = await paiementService.initierPaiement(request);
-      print(response);
+      customLogger.e(response);
 
       // 1. Vérification de la réponse
       if (response.success == true && response.data != null) {
-        final checkoutUrl = response.data?.checkoutUrl ??
-            response.data?.paymentUrl;
-
+        final checkoutUrl = response.data?.checkoutUrl ?? response.data?.paymentUrl;
         if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
-          print('URL de paiement: $checkoutUrl');
-
+          customLogger.e('URL de paiement: $checkoutUrl');
           // 2. Lancement de l'URL
           final uri = Uri.parse(checkoutUrl);
-          await launchUrl(
-            uri,
-            mode: LaunchMode.platformDefault, // Ouvre dans le navigateur
+          await launchUrl(uri, mode: LaunchMode.platformDefault, // Ouvre dans le navigateur
           );
-          // if (await canLaunchUrl(uri)) {
-          //   await launchUrl(
-          //     uri,
-          //     // mode: LaunchMode.externalApplication, // Ouvre dans le navigateur
-          //   );
-          // } else {
-          //   print('Impossible de lancer l\'URL: $checkoutUrl');
-          //   // Option: Afficher un message d'erreur à l'utilisateur
-          // }
-        } else {
-          print('URL de paiement non trouvée dans la réponse');
         }
-      } else {
-        // print('Échec de l\'API: ${response['message'] ?? 'Raison inconnue'}');
       }
     } catch (error) {
-      print('Erreur lors du paiement: $error');
-      // Gérer l'erreur (afficher un SnackBar, etc.)
+      customLogger.e('Erreur lors du paiement: $error');
     } finally {
       isLoading = false;
       notifyListeners();

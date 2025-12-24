@@ -4,12 +4,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tickup/ressources/const/app_theme.dart';
 import 'package:tickup/views/acccueil/home.dart';
 import 'package:tickup/views/authentification/connexion_view.dart';
+import 'package:tickup/views_models/authentification/authentification_viewmodel.dart';
 import 'package:tickup/views_models/evenements/evenement_viewmodel.dart';
 import 'package:tickup/views_models/paiements/paiement_pro_view_model.dart';
 import 'package:tickup/web_services/implementations/evenement_impl.dart';
 import 'package:tickup/web_services/implementations/paiement_impl.dart';
+import 'package:tickup/web_services/services/auth_service.dart';
 
 import 'firebase_options.dart';
 import 'ressources/utils/secure_storage.dart';
@@ -41,6 +44,11 @@ class TickUpApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Fournit EvenementsViewModel. Les données seront accessibles partout.
+        ChangeNotifierProvider<AuthViewModel>(
+          create: (context) => AuthViewModel(
+            authService: AuthService(),
+          ),
+        ),
         ChangeNotifierProvider(
           create: (_) => EvenementViewModel(evenementService: EvenementImpl()),
         ),
@@ -50,6 +58,8 @@ class TickUpApp extends StatelessWidget {
         // Ajoutez d'autres ViewModels ici si nécessaire (ex: AuthViewModel())
       ],
       child: MaterialApp(
+        theme: AppTheme.defaultTheme,
+
         debugShowCheckedModeBanner: false,
         home: isLoggedIn
             ? Home()

@@ -35,6 +35,14 @@ class EvenementViewModel extends ChangeNotifier {
   ];
   // List<TicketModel> tickets = [];
 
+  void clearFilters() {
+    selectedTypeEvenement = null;
+    filterEvenementByType();
+  }
+  void filterByType(TypeEvenement? typeEvenement) {
+    selectedTypeEvenement = typeEvenement;
+    filterEvenementByType();
+  }
   EvenementModel? selectedEvenement;
   // TicketModel? selectedTicket;
   TypeEvenement? selectedTypeEvenement;

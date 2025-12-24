@@ -1,7 +1,7 @@
 import 'package:tickup/models/customer_model.dart';
 
 class GenuisPayRequest {
-  int? amount;
+  double? amount;
   String? description;
   String? currency;
   Customer? customer;
@@ -17,7 +17,7 @@ class GenuisPayRequest {
   /// FROM JSON
   factory GenuisPayRequest.fromJson(Map<String, dynamic> json) {
     return GenuisPayRequest(
-      amount: json['amount'] ?? 0,
+      amount: json['amount'],
       description: json['description'] ?? '',
       currency: json['currency'] ?? '',
       successUrl: json['successUrl'] ?? '',
