@@ -21,7 +21,7 @@ Elle offre une expérience fluide aux utilisateurs comme aux administrateurs, av
    - Architecture : MVVM (Model – View – ViewModel)
    - State Management : Provider
    - UI Design : 
-        - Typographies : Poppins
+        - Typographies : Montserrat
    - Packages principaux : 
         - firebase_auth
         - cloud_firestore
@@ -31,12 +31,12 @@ Elle offre une expérience fluide aux utilisateurs comme aux administrateurs, av
         - http
 
 
-## ⚙️ Backend avancé — Spring Boot
+## ⚙️ Backend avancé — Js
     
 
 1. **Cloner le projet**
    ```bash
-   git clone http://192.168.30.50/it-centrex/fusionsuperapp
+   git clone https://github.com/Ymas0908/tickup
    cd tickup
 
 
