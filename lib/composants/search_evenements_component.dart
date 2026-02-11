@@ -152,7 +152,7 @@ class _SearchEvenementsComponentState extends State<SearchEvenementsComponent> {
                 child: PrimaryButton(
                   title: "Appliquer les filtres",
                   onPressed: () {
-                    evenementVM.filterEvenementByType();
+                    // evenementVM.filterEvenementByType();
                     Navigator.pop(context);
                   },
                 ),

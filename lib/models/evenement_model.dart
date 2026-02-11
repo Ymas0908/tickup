@@ -1,137 +1,172 @@
-import 'enum/type_evenement.dart';
-import 'enum/type_ticket.dart';
-
 class EvenementModel {
-  int? id;
-  String? nom;
-  String? urlImage;
-  String? libelle;
-  String description;
-  String lieu;
-  String? prixTicketGP;
-  String? prixTicketVIP;
-  String? prixTicketVVIP;
-  DateTime dateHeureEvenement;
-  DateTime dateHeureCreation;
-  TypeEvenement typeEvenement;
+  String? sId;
+  String? title;
+  String? description;
+  String? date;
+  Venue? venue;
+  Category? category;
+  Organizer? organizer;
+  bool? isApproved;
+  int? iV;
 
-  EvenementModel({
-    this.id,
-    required this.nom,
-    required this.urlImage,
-    required this.libelle,
-    required this.description,
-    required this.lieu,
-    required this.prixTicketGP,
-    required this.prixTicketVIP,
-    required this.prixTicketVVIP,
-    required this.dateHeureEvenement,
-    required this.dateHeureCreation,
-    required this.typeEvenement,
-  });
+  EvenementModel(
+      {this.sId,
+        this.title,
+        this.description,
+        this.date,
+        this.venue,
+        this.category,
+        this.organizer,
+        this.isApproved,
+        this.iV});
 
-  factory EvenementModel.fromJson(Map<String, dynamic> json) {
-    print("EvenementModel json: $json");
-    return EvenementModel(
-      id: json['id'],
-      nom: json['nom'],
-      urlImage: json['urlImage'],
-      libelle: json['libelle'],
-      description: json['description'],
-      lieu: json['lieu'],
-      dateHeureEvenement: DateTime.parse(json['dateHeureEvenement']),
-      dateHeureCreation: DateTime.parse(json['dateHeureCreation']),
-      typeEvenement: TypeEvenement.values.firstWhere(
-            (type) => type.name == json['typeEvenement'],
-      ),
-      prixTicketGP: json['prixTicketGP'],
-      prixTicketVIP: json['prixTicketVIP'],
-      prixTicketVVIP: json['prixTicketVVIP'],
-    );
+  EvenementModel.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    title = json['title'];
+    description = json['description'];
+    date = json['date'];
+    venue = json['venue'] != null ? new Venue.fromJson(json['venue']) : null;
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
+    organizer = json['organizer'] != null
+        ? new Organizer.fromJson(json['organizer'])
+        : null;
+    isApproved = json['isApproved'];
+    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'nom': nom,
-      'urlImage': urlImage,
-      'libelle': libelle,
-      'description': description,
-      'lieu': lieu,
-      'dateEvenement': dateHeureEvenement,
-      'dateHeureCreation': dateHeureCreation,
-      'typeEvenement': typeEvenement.name,
-      'prixTicketGP': prixTicketGP,
-      'prixTicketVIP': prixTicketVIP,
-      'prixTicketVVIP': prixTicketVVIP,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['date'] = this.date;
+    if (this.venue != null) {
+      data['venue'] = this.venue!.toJson();
+    }
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
+    }
+    if (this.organizer != null) {
+      data['organizer'] = this.organizer!.toJson();
+    }
+    data['isApproved'] = this.isApproved;
+    data['__v'] = this.iV;
+    return data;
+  }
+}
+
+class Venue {
+  String? sId;
+  String? name;
+  String? address;
+  String? city;
+  String? country;
+  int? capacity;
+  String? createdAt;
+  int? iV;
+
+  Venue(
+      {this.sId,
+        this.name,
+        this.address,
+        this.city,
+        this.country,
+        this.capacity,
+        this.createdAt,
+        this.iV});
+
+  Venue.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+    address = json['address'];
+    city = json['city'];
+    country = json['country'];
+    capacity = json['capacity'];
+    createdAt = json['createdAt'];
+    iV = json['__v'];
   }
 
-  static TypeEvenement stringToTypeEvenement(String value) {
-    switch (value) {
-      case 'CONCERT':
-        return TypeEvenement.CONCERT;
-      case 'FESTIVAL':
-        return TypeEvenement.FESTIVAL;
-      case 'CINEMA':
-        return TypeEvenement.CINEMA;
-      case 'RELEASE_PARTY':
-        return TypeEvenement.RELEASE_PARTY;
-      case 'THEATRE':
-        return TypeEvenement.THEATRE;
-      case 'MATCH':
-        return TypeEvenement.MATCH;
-      case 'EXPOSITION':
-        return TypeEvenement.EXPOSITION;
-      default:
-        throw Exception('Type d\'evenement inconnu');
-    }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['name'] = this.name;
+    data['address'] = this.address;
+    data['city'] = this.city;
+    data['country'] = this.country;
+    data['capacity'] = this.capacity;
+    data['createdAt'] = this.createdAt;
+    data['__v'] = this.iV;
+    return data;
+  }
+}
+
+class Category {
+  String? sId;
+  String? name;
+  String? description;
+  String? createdAt;
+  int? iV;
+
+  Category({this.sId, this.name, this.description, this.createdAt, this.iV});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+    description = json['description'];
+    createdAt = json['createdAt'];
+    iV = json['__v'];
   }
 
-  static String? typeEvenementToString(TypeEvenement typeEvenement) {
-    switch (typeEvenement) {
-      case TypeEvenement.CONCERT:
-        return 'CONCERT';
-      case TypeEvenement.FESTIVAL:
-        return 'FESTIVAL';
-      case TypeEvenement.THEATRE:
-        return 'THEATRE';
-      case TypeEvenement.MATCH:
-        return 'MATCH';
-      case TypeEvenement.RELEASE_PARTY:
-        return 'RELEASE_PARTY';
-      case TypeEvenement.CINEMA:
-        return 'CINEMA';
-      case TypeEvenement.EXPOSITION:
-        return 'EXPOSITION';
-      default:
-        return null; // Valeur par défaut en cas de type inconnu
-    }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['createdAt'] = this.createdAt;
+    data['__v'] = this.iV;
+    return data;
+  }
+}
+
+class Organizer {
+  String? sId;
+  String? name;
+  String? email;
+  String? password;
+  String? role;
+  String? createdAt;
+  int? iV;
+
+  Organizer(
+      {this.sId,
+        this.name,
+        this.email,
+        this.password,
+        this.role,
+        this.createdAt,
+        this.iV});
+
+  Organizer.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+    email = json['email'];
+    password = json['password'];
+    role = json['role'];
+    createdAt = json['createdAt'];
+    iV = json['__v'];
   }
 
-  static TypeTicket stringToTypeTicket(String value) {
-    switch (value) {
-      case 'GP':
-        return TypeTicket.GP;
-      case 'VIP':
-        return TypeTicket.VIP;
-      case 'VVIP':
-        return TypeTicket.VVIP;
-      default:
-        throw Exception('Type de ticket inconnu');
-    }
-  }
-
-  static String? typeTicketToString(TypeTicket typeTicket) {
-    switch (typeTicket) {
-      case TypeTicket.GP:
-        return 'GP';
-      case TypeTicket.VIP:
-        return 'VIP';
-      case TypeTicket.VVIP:
-        return 'VVIP';
-      default:
-        return null; // Valeur par défaut en cas de type inconnu
-    }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['password'] = this.password;
+    data['role'] = this.role;
+    data['createdAt'] = this.createdAt;
+    data['__v'] = this.iV;
+    return data;
   }
 }

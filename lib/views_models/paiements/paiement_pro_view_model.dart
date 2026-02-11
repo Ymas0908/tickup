@@ -41,7 +41,7 @@ class PaiementViewModel extends ChangeNotifier {
       if (response.success == true && response.data != null) {
         final checkoutUrl = response.data?.checkoutUrl ?? response.data?.paymentUrl;
         if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
-          customLogger.e('URL de paiement: $checkoutUrl');
+          customLogger.i('URL de paiement: $checkoutUrl');
           // 2. Lancement de l'URL
           final uri = Uri.parse(checkoutUrl);
           await launchUrl(uri, mode: LaunchMode.platformDefault, // Ouvre dans le navigateur

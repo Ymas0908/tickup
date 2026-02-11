@@ -15,18 +15,12 @@ class EvenementImpl extends EvenementService {
   Future<List<EvenementModel>> getAllEvenements() async {
     try {
       final response = await dioClient.dio.get(
-        "$baseUrl/evenements",);
+        "$baseUrl/events");
 
       print("Response DIO ::::::::::: ${response.data}");
       print("Statut DIO ::::::::::::${response.statusCode}");
-
-      // Récupérer la liste à partir de la clé 'data'
-      final dataList = (response.data['body'] as List<dynamic>?) ?? [];
-      print("Data liste :::: $dataList");
-
-      return dataList
-          .map((e) => EvenementModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+      final List<dynamic> data = response.data;
+      return data.map((e) => EvenementModel.fromJson(e)).toList();
     } on DioException catch (error) {
       print("Une erreur est survenue ${error.message}");
       throw ApiErrorHandler.handle(error);

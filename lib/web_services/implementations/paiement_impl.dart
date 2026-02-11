@@ -19,7 +19,7 @@ class PaiementImpl implements PaiementService {
     try {
       print("Initiating payment with request: ${request.toJson()}");
       final response = await dioClient.dio.post(
-        baseUrl + '/payments',
+        genuisPayurl + '/payments',
         data: request.toJson(),
         options: Options(
           headers: {
