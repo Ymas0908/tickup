@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:tickup/ressources/const/app_theme.dart';
 import 'package:tickup/views/acccueil/home.dart';
 import 'package:tickup/views/authentification/connexion_view.dart';
+import 'package:tickup/views/on_boarding.dart';
 import 'package:tickup/views_models/authentification/authentification_viewmodel.dart';
 import 'package:tickup/views_models/evenements/evenement_viewmodel.dart';
 import 'package:tickup/views_models/paiements/paiement_pro_view_model.dart';
@@ -63,7 +64,7 @@ class TickUpApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: isLoggedIn
             ? Home()
-            : ConnexionView(), // Redirige vers la page d'accueil si connecté, sinon vers la page de connexion
+            : OnboardingView(), // Redirige vers la page d'accueil si connecté, sinon vers la page de connexion
       ),    );  }
 }
 

@@ -1,125 +1,207 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tickup/ressources/utils/log_config.dart';
 import 'package:tickup/views/acccueil/home.dart';
 import 'package:tickup/views/authentification/connexion_view.dart';
 
-
-
 class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /***
-   * Methode pour s'inscrire
-   */
-  Future<void> signup(
-      {required String email,
-      required String password,
-      required BuildContext context}) async {
+  /// ===============================
+  /// 🔹 Récupérer utilisateur connecté
+  /// ===============================
+  User? get currentUser => _auth.currentUser;
+
+  /// ===============================
+  /// 🔹 Inscription
+  /// ===============================
+  Future<bool?> seInscrire({required String email, required String password, required BuildContext context,}) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-
-      await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) =>  Home()));
-    } on FirebaseAuthException catch (e) {
-      String message = '';
-      if (e.code == 'weak-password') {
-        message = 'Le mot de passe est trop faible.';
-      } else if (e.code == 'email-already-in-use') {
-        message = 'Un compte existe déjà avec cette adresse email.';
+      UserCredential credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (credential.user != null) {
+        await credential.user!.sendEmailVerification();
+        customLogger.i("📩 Email de vérification envoyé");
       }
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
-    } catch (e) {
-      print(e);
-      Fluttertoast.showToast(
-        msg: 'Une erreur est survenue lors de l\'inscription.',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
+
+      customLogger.i(" Réponse Firebase reçue");
+      customLogger.i("User UID : ${credential.user?.uid}");
+      customLogger.i("Email vérifié ? : ${credential.user?.emailVerified}");
+      customLogger.i("Email vérifié ? : ${credential.user?.emailVerified}");
+      customLogger.i("Provider : ${credential.credential?.providerId}");
+      return true;
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.code);
+      return false;
     }
   }
 
-
-  /***
-   * Methode pour se connecter
-   */
-
+  /// ===============================
+  /// 🔹 Connexion
+  /// ===============================
   Future<void> signin({
     required String email,
     required String password,
     required BuildContext context,
   }) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'Utilisateur non trouvé') {
-        print('Utilisateur non trouve pour cet email.');
-      } else if (e.code == 'Mot de passe incorrect') {
-        print('Mot de passe incorrect fourni pour cet utilisateur');
-      }
-    }
-  }
 
-
-  /***
-   * Methode pour se deconnecter
-   */
-  Future<void> signout({required BuildContext context}) async {
-    await FirebaseAuth.instance.signOut();
-    await Future.delayed(const Duration(seconds: 1));
-    // Navigator.pushReplacement(
-    //     context, MaterialPageRoute(builder: (BuildContext context) => Login()));
-  }
-
-
-  /***
-   * Methode pour réinitialiser le mot de passe par email
-   */
-  Future<void> resetPassword(
-      {required String email, required BuildContext context}) async {
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      await Future.delayed(const Duration(seconds: 1));
-
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => const ConnexionView(),
-        ),
+        MaterialPageRoute(builder: (_) => Home()),
       );
     } on FirebaseAuthException catch (e) {
-      String message = '';
-      if (e.code == 'invalid-email') {
-        message = 'Aucun compte n\'est associe à cette adresse email.';
-      }
-    } catch (e) {
-      print(e);
+      _handleAuthError(e);
     }
   }
 
-  Future<void> signout2({required BuildContext context}) async {
-    await FirebaseAuth.instance.authStateChanges().listen((event) => null,);
-    await Future.delayed(const Duration(seconds: 1));
+  /// ===============================
+  /// 🔹 Déconnexion
+  /// ===============================
+  Future<void> signout({required BuildContext context}) async {
+    await _auth.signOut();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const ConnexionView()),
+    );
   }
 
+  /// ===============================
+  /// 🔹 Reset Password
+  /// ===============================
+  Future<void> resetPassword({
+    required String email,
+  }) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      _showToast("Email de réinitialisation envoyé.");
+    } on FirebaseAuthException catch (e) {
+      _handleAuthError(e);
+    }
+  }
 
+  /// ===============================
+  /// 🔹 Vérifier email
+  /// ===============================
+  Future<void> sendEmailVerification() async {
+    try {
+      await currentUser?.sendEmailVerification();
+      _showToast("Email de vérification envoyé.");
+    } catch (e) {
+      _showToast("Erreur lors de l'envoi de l'email.");
+    }
+  }
 
+  /// ===============================
+  /// 🔹 Mettre à jour le nom
+  /// ===============================
+  Future<void> updateDisplayName(String name) async {
+    try {
+      await currentUser?.updateDisplayName(name);
+      await currentUser?.reload();
+      _showToast("Nom mis à jour.");
+    } catch (e) {
+      _showToast("Erreur mise à jour nom.");
+    }
+  }
 
+  /// ===============================
+  /// 🔹 Mettre à jour email
+  /// ===============================
+  Future<void> updateEmail(String newEmail) async {
+    try {
+      await currentUser?.verifyBeforeUpdateEmail(newEmail);
+      _showToast("Email mis à jour.");
+    } on FirebaseAuthException catch (e) {
+      _handleAuthError(e);
+    }
+  }
 
+  /// ===============================
+  /// 🔹 Mettre à jour mot de passe
+  /// ===============================
+  Future<void> updatePassword(String newPassword) async {
+    try {
+      await currentUser?.updatePassword(newPassword);
+      _showToast("Mot de passe mis à jour.");
+    } on FirebaseAuthException catch (e) {
+      _handleAuthError(e);
+    }
+  }
 
+  /// ===============================
+  /// 🔹 Supprimer compte
+  /// ===============================
+  Future<void> deleteAccount(BuildContext context) async {
+    try {
+      await currentUser?.delete();
+      _showToast("Compte supprimé.");
 
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const ConnexionView()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        _showToast("Reconnectez-vous pour supprimer le compte.");
+      } else {
+        _handleAuthError(e);
+      }
+    }
+  }
+
+  /// ===============================
+  /// 🔹 Reload utilisateur
+  /// ===============================
+  Future<void> reloadUser() async {
+    await currentUser?.reload();
+  }
+
+  /// ===============================
+  /// 🔹 Gestion centralisée erreurs
+  /// ===============================
+  void _handleAuthError(FirebaseAuthException e) {
+    String message;
+
+    switch (e.code) {
+      case 'weak-password':
+        message = "Mot de passe trop faible.";
+        break;
+      case 'email-already-in-use':
+        message = "Email déjà utilisé.";
+        break;
+      case 'user-not-found':
+        message = "Utilisateur non trouvé.";
+        break;
+      case 'wrong-password':
+        message = "Mot de passe incorrect.";
+        break;
+      case 'invalid-email':
+        message = "Email invalide.";
+        break;
+      default:
+        message = "Erreur : ${e.message}";
+    }
+
+    _showToast(message);
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.SNACKBAR,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 14.0,
+    );
+  }
 }

@@ -35,6 +35,14 @@ class _SplashScreenViewState extends State<SplashScreenView> {
               width: 192,
               height: 163,
             ),
+            Text(
+              'TickUp',
+              style: TextStyle(
+                fontSize: 24, // Taille du texte
+                fontWeight: FontWeight.bold, // Gras (optionnel)
+                color: Colors.black, // Couleur (optionnel)
+              ),
+            ),
             const SizedBox(height: 16),
           ],
         ),

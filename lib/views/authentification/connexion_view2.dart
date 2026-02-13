@@ -154,22 +154,30 @@ class _ConnexionViewState extends State<ConnexionView> {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           child: PrimaryButton(
             title: "Se connecter",
-            onPressed: () {
-              final authVm =
-              Provider.of<AuthViewModel>(context, listen: false);
+            onPressed: () async {
+              final viewModel = Provider.of<AuthViewModel>(
+                context,
+                listen: false,
+              );
 
-              final login = authVm.emailController.text.trim();
-              final password =
-              authVm.passwordController.text.trim();
+              final email = viewModel.emailController.text.trim();
+              final password = viewModel.passwordController.text.trim();
 
-              if (login.isEmpty || password.isEmpty) {
-                HapticFeedback.vibrate();
+              if (viewModel.emailController.text.isEmpty || viewModel.passwordController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content:
-                    Text("Veuillez remplir tous les champs"),
+                    content: Text("Veuillez remplir tous les champs obligatoires"),
                     backgroundColor: Colors.red,
-                    duration: Duration(seconds: 2),
+                  ),
+                );
+                return;
+              }
+
+              if (!viewModel.emailRegex.hasMatch(email)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Adresse email invalide"),
+                    backgroundColor: Colors.red,
                   ),
                 );
                 return;
@@ -177,18 +185,28 @@ class _ConnexionViewState extends State<ConnexionView> {
 
               showLoadingSession(context);
 
-              authVm.signin(
-                email: login,
-                password: password,
-                context: context,
-              );
+              try {
+                await viewModel.seConnecter(email, password);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Acceuil(),
-                ),
-              );
+                Navigator.pop(context);
+
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Acceuil(),
+                  ),
+                );
+              } catch (e) {
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Une erreur est survenue lors de l'enrôlement."),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                debugPrint("Erreur lors de le connexion : $e");
+              }
             },
           ),
         ),

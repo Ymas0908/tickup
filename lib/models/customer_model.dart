@@ -1,21 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Customer {
+  String? id; // ID Firebase
   String? name;
   String? email;
   String? phone;
+  DateTime? createdAt;
+  DateTime? lastLogin;
 
-  Customer({this.name, this.email, this.phone});
+  Customer({
+    this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.createdAt,
+    this.lastLogin,
+  });
 
-  Customer.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
+  factory Customer.fromJson(Map<String, dynamic> json) {
+    return Customer(
+      id: json['id'],
+      phone: json['phone'],
+      name: json['name'],
+      email: json['email'],
+      createdAt: json['createdAt'],
+      lastLogin: json['lastLogin'],
+
+
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['phone'] = this.phone;
-    return data;
+    return {
+      'id': id,
+      'phone': phone,
+      'name': name,
+      'email': email,
+      'createdAt': createdAt,
+      'lastLogin': lastLogin,
+
+    };
   }
+
+
 }
