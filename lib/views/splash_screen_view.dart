@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:tickup/views/on_boarding.dart';
 
 class SplashScreenView extends StatefulWidget {
   const SplashScreenView({super.key});
@@ -14,11 +15,11 @@ class _SplashScreenViewState extends State<SplashScreenView> {
     super.initState();
 
     // ⏱️ Après 3 secondes, on redirige vers la page d’onboarding
-    // Timer(const Duration(seconds: 3), () {
-    //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-    //      return OnBoardingView();
-    //   },));
-    // });
+    Timer(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+         return OnboardingView();
+      },));
+    });
   }
 
   @override
@@ -30,11 +31,11 @@ class _SplashScreenViewState extends State<SplashScreenView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Logo du shop (sac souriant)
-            Image.asset(
-              'assets/images/myshop_logo.png',
-              width: 192,
-              height: 163,
-            ),
+            // Image.asset(
+            //   'assets/images/myshop_logo.png',
+            //   width: 192,
+            //   height: 163,
+            // ),
             Text(
               'TickUp',
               style: TextStyle(

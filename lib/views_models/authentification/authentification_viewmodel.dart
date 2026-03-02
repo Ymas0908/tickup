@@ -1,167 +1,176 @@
+
+
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tickup/models/Request/update_password_request.dart';
+import 'package:tickup/models/Request/update_user_password_forget_request.dart';
+import 'package:tickup/models/Request/usager_request.dart';
+import 'package:tickup/models/auth_data.dart';
+import 'package:tickup/models/user_connected.dart';
 import 'package:tickup/ressources/utils/log_config.dart';
-import 'package:tickup/web_services/services/auth_service.dart';
+import 'package:tickup/web_services/implementations/authentification/auth_service_impl.dart';
+import 'package:tickup/web_services/services/merchant_services.dart';
+
+class AuthentificationViewmodel extends ChangeNotifier {
+  final AuthServiceImpl authService;
+  final UsagerService usagerService;
+
+  AuthentificationViewmodel({
+    required this.authService,
+    required this.usagerService,
+  });
+
+  // Controllers pour s'inscrire
+  TextEditingController nomController = TextEditingController();
+  TextEditingController prenomController = TextEditingController();
+  TextEditingController telephoneController = TextEditingController();
 
 
-class AuthViewModel extends ChangeNotifier {
-  final AuthService authService;
-
-  User? get user => FirebaseAuth.instance.currentUser;
-
-  AuthViewModel({required this.authService});
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  // Controllers pour login
+  TextEditingController loginController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
+  // Controllers pour mot de passe (1ere connexion)
+  final TextEditingController pwdRecuController = TextEditingController();
+  final TextEditingController nouveauPwdController = TextEditingController();
+  final TextEditingController confirmerPwdController = TextEditingController();
+
+  // Controllers pour renitialisation mot de passe
+  final TextEditingController adresseEmailController = TextEditingController();
   bool isLoading = false;
+  String? errorMessage;
+  bool isAuthenticated = false;
+  UserConnected? userConnected;
 
+  Future<AuthData?> seConnecter() async {
+    final login = loginController.text.trim();
+    final pwd = passwordController.text.trim();
 
-
-  /***
-   * Methode pour s'inscrire
-   */
-  // Future<void> signup({required String email, required String password, required String nom, required BuildContext context,}) async {
-  //   try {
-  //     await authService.signup(email: email, password: password, context: context, nom: nom);
-  //     print("Inscription..."+ "Utilisateur inscrit "+  FirebaseAuth.instance.currentUser!.email.toString());
-  //     emailController.clear();
-  //     passwordController.clear();
-  //   } on Exception catch (e) {
-  //     // Gérer les erreurs d'inscription
-  //     print("Une erreur s'est produite: $e");
-  //     print(e);    }
-  //   setLoading(false);
-  // }
-  Future<bool> inscription({required String email, required String password,}) async {
-    try {
-      UserCredential credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      if (credential.user != null) {
-        await credential.user!.sendEmailVerification();
-        // customLogger.i("📩 Email de vérification envoyé");
-      }
-
-      // customLogger.i(" Réponse Firebase reçue");
-      // customLogger.i("User UID : ${credential.user?.uid}");
-      // customLogger.i("Email vérifié ? : ${credential.user?.emailVerified}");
-      // customLogger.i("Email vérifié ? : ${credential.user?.emailVerified}");
-      // customLogger.i("Provider : ${credential.credential?.providerId}");
-      return true;
-    } on FirebaseAuthException catch (e) {
-      debugPrint(e.code);
-      return false;
+    if (login.isEmpty || pwd.isEmpty) {
+      errorMessage = "Veuillez remplir tous les champs.";
+      notifyListeners();
+      return null;
     }
-  }
-  Future<bool> seConnecter(String email, String password) async {
-
-    customLogger.i("📤 Tentative de connexion : $email");
 
     try {
+      isLoading = true;
+      errorMessage = null;
+      notifyListeners();
 
-      UserCredential credential =
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      final AuthData? authData = await authService.login(login, pwd);
+
+      // Stocker le token et le refUsager (clé uniforme)
+      await const FlutterSecureStorage().write(
+        key: 'auth_token',
+        value: authData?.accessToken,
       );
-      resetConnextionForm();
+      await const FlutterSecureStorage().write(
+        key: 'auth_refUsager',
+        value: authData?.refUsager,
+      );
+      passwordController.clear();
 
-      customLogger.i(" Connexion réussie");
-      customLogger.i("UID : ${credential.user?.uid}");
-      customLogger.i("Email vérifié ? : ${credential.user?.emailVerified}");
+      // Récupérer les infos du marchand après login
+      await getUserMarchand();
+      customLogger.i(
+        "Connexion réussie pour l'utilisateur: ${userConnected?.toString()}",
+      );
 
-      /// Vérification email confirmé
-      if (credential.user != null &&
-          !credential.user!.emailVerified) {
-
-        customLogger.w(" Email non vérifié");
-        return false;
-      }
-
-      return true;
-
-    } on FirebaseAuthException catch (e, stackTrace) {
-
-      customLogger.e(" FirebaseAuthException");
-      customLogger.e("Code : ${e.code}");
-      customLogger.e("Message : ${e.message}");
-      customLogger.e("StackTrace : $stackTrace");
-
-      return false;
-
-    } catch (e, stackTrace) {
-
-      customLogger.e(" Erreur inconnue");
-      customLogger.e("Erreur : $e");
-      customLogger.e("StackTrace : $stackTrace");
-
-      return false;
+      return authData;
+    } catch (e) {
+      customLogger.e("Erreur lors de la connexion : ${e.toString()}");
+      rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
-  void resetConnextionForm() {
-    emailController.clear();
+  Future<UsagerRequest?> seInscrire() async {
+    try {
+      final usagerRequest = UsagerRequest(
+        prenom: prenomController.text.trim(),
+        nom: nomController.text.trim(),
+        email: adresseEmailController.text.trim(),
+        telephone: telephoneController.text.trim(),
+        dateNaissance: adresseEmailController.text.trim(),
+      );
+      final response = await usagerService.saveUsager(usagerRequest);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getUserMarchand() async {
+    try {
+      final String? refUsager = await const FlutterSecureStorage().read(
+        key: 'auth_refUsager',
+      );
+      if (refUsager == null) return;
+      userConnected = await authService.usagerConnected(refUsager);
+      notifyListeners();
+    } catch (e) {
+      customLogger.e("Erreur lors de la récupération du marchand: $e");
+    }
+  }
+
+  Future<void> updatePassword() async {
+    try {
+      UpdatePasswordRequest updatePasswordRequest = UpdatePasswordRequest(
+        login: loginController.text.trim(),
+        oldPassword: passwordController.text.trim(),
+        newPassword: nouveauPwdController.text.trim(),
+        confirmNewPassword: confirmerPwdController.text.trim(),
+      );
+      await authService.updatePassword(updatePasswordRequest);
+      loginController.clear();
+      passwordController.clear();
+      nouveauPwdController.clear();
+      confirmerPwdController.clear();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> resetPassword() async {
+    try {
+      UpdateUserPasswordForgetRequest updateUserPasswordForgetRequest =
+      UpdateUserPasswordForgetRequest(
+        login: adresseEmailController.text.trim(),
+        newPassword: nouveauPwdController.text.trim(),
+        confirmNewPassword: confirmerPwdController.text.trim(),
+      );
+      await authService.resetPassword(updateUserPasswordForgetRequest);
+      loginController.clear();
+      adresseEmailController.clear();
+      passwordController.clear();
+      nouveauPwdController.clear();
+      confirmerPwdController.clear();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void resetForm() {
+    loginController.clear();
     passwordController.clear();
+    nouveauPwdController.clear();
+    confirmerPwdController.clear();
+    adresseEmailController.clear();
+    errorMessage = null;
+    notifyListeners();
   }
 
+  void logout() async {
+    await const FlutterSecureStorage().deleteAll();
+    isAuthenticated = false;
+    notifyListeners();
+  }
 
-
-  /***
-   * Methode pour se connecter
-   */
-  // Future<void> signin({required String email, required String password, required BuildContext context,}) async {
-  //   try {
-  //     await authService.signin(email: email, password: password, context: context,);
-  //     emailController.clear();
-  //     passwordController.clear();
-  //   } on Exception catch (e) {
-  //     print("Une erreur s'est produite: $e");
-  //     print(e);
-  //   }
-  //   setLoading(false);
-  // }
-
-
-
-
-
-  /***
-   * Methode pour se deconnecter
-   */
-  // Future<void> signout(BuildContext context) async {setLoading(true);
-  //   try {
-  //     print("Deconnexion."+ "Utilisateu  déconnecté");
-  //     await authService.signout(context: context);
-  //     emailController.clear();
-  //     passwordController.clear();
-  //   } on Exception catch (e) {
-  //     print("Une erreur s'est produite: $e");
-  //     print(e);
-  //   }
-  //   setLoading(false);
-  // }
-
-
-
-  /***
-   * Methode pour réinitialiser le mot de passe par email
-   */
-  // Future<void> resetPassword({required String email, required BuildContext context,}) async {setLoading(true);
-  //
-  //   try {
-  //     print("Mot de passe rénitiliasé. Email envoyé à l'adresse" + email);
-  //     await authService.resetPassword(email: email, context: context,);
-  //   } on Exception catch (e) {
-  //     print("Une erreur s'est produite: $e");
-  //     print(e);
-  //   }
-  //   setLoading(false);
-  // }
-
-
+  void resetToken() async {
+    await const FlutterSecureStorage().delete(key: 'auth_token');
+    await const FlutterSecureStorage().delete(key: 'auth_refUsager');
+    userConnected = null;
+    notifyListeners();
+  }
 }

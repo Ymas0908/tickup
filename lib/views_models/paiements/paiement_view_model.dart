@@ -4,7 +4,6 @@ import 'package:tickup/models/enum/Payement_methode.dart';
 import 'package:tickup/ressources/utils/log_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../models/request/paiement_pro_request.dart';
 import '../../web_services/services/paiements/paiement_service.dart';
 
 class PaiementViewModel extends ChangeNotifier {

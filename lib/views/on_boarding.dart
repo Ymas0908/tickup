@@ -3,6 +3,7 @@ import 'package:tickup/composants/primary_button.dart';
 import 'package:tickup/ressources/const/app_colors.dart';
 import 'package:tickup/views/authentification/Inscription_view.dart';
 import 'package:tickup/views/authentification/connexion_view.dart';
+import 'package:tickup/views/authentification/connexion_view2.dart';
 
 class OnboardingView extends StatelessWidget {
   const OnboardingView({Key? key}) : super(key: key);

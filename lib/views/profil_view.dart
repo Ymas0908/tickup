@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tickup/composants/primary_button.dart';
 import 'package:tickup/ressources/const/app_colors.dart';
 import 'package:tickup/views/authentification/connexion_view.dart';
+import 'package:tickup/views/authentification/connexion_view2.dart';
 import 'package:tickup/views_models/authentification/authentification_viewmodel.dart';
 
 class ProfilView extends StatefulWidget {
@@ -23,13 +23,13 @@ class _ProfilViewState extends State<ProfilView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _backgroundColor,
-      body: Consumer<AuthViewModel>(
+      body: Consumer<AuthentificationViewmodel>(
         builder: (context, authVm, child) {
-          // final user = authVm.user;
-          // final userEmail = user?.email ?? 'Non connecté';
-          // final displayName = user?.displayName ?? 'Utilisateur';
-          // final isEmailVerified = user?.emailVerified ?? false;
-          // final photoUrl = user?.photoURL;
+          // final userConnected = authVm.userConnected;
+          // final userConnectedEmail = userConnected?.email ?? 'Non connecté';
+          // final displayName = userConnected?.displayName ?? 'Utilisateur';
+          // final isEmailVerified = userConnected?.emailVerified ?? false;
+          // final photoUrl = userConnected?.photoURL;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +46,9 @@ class _ProfilViewState extends State<ProfilView> {
                       radius: 28,
                       backgroundColor: AppColors.primaryBlue,
                       child: Text(
-                        authVm.user?.displayName ?? "",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        getUserInitials(authVm.userConnected?.nom ?? authVm.userConnected?.prenom),
+                        style: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -59,14 +60,14 @@ class _ProfilViewState extends State<ProfilView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            authVm.user?.displayName ?? " Profil",
+                            authVm.userConnected?.nom ?? authVm.userConnected?.prenom ?? "N/A",
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            authVm.user?.email ?? "email",
+                            authVm.userConnected?.email ?? "email",
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -373,7 +374,18 @@ class _ProfilViewState extends State<ProfilView> {
 
 
 
+  String getUserInitials(String? userConnectedName) {
+    if (userConnectedName == null || userConnectedName.isEmpty) return "";
 
+    // Découper le nom par les espaces
+    final words = userConnectedName.split(' ');
+
+    // Prendre la première lettre de chaque mot
+    final initials = words.map((word) => word.isNotEmpty ? word[0].toUpperCase() : '').join();
+
+    // Si tu veux seulement les deux premières lettres (deux premiers mots)
+    return initials.length > 2 ? initials.substring(0, 2) : initials;
+  }
 
 
 

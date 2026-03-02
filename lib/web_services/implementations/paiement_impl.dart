@@ -4,7 +4,6 @@ import 'package:tickup/models/response/genuis_pay_response.dart';
 import 'package:tickup/ressources/utils/base_url.dart';
 import 'package:tickup/web_services/dio_client/dio_client.dart';
 
-import '../../models/request/paiement_pro_request.dart';
 import '../../models/response/paiement_pro_response.dart';
 import '../services/paiements/paiement_service.dart';
 

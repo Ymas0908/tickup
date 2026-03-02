@@ -5,10 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:tickup/composants/input.dart';
 import 'package:tickup/composants/primary_button.dart';
 import 'package:tickup/composants/showLoadingSession.dart';
+import 'package:tickup/exception/app_exception.dart';
+import 'package:tickup/models/auth_data.dart';
 import 'package:tickup/ressources/const/app_colors.dart';
 import 'package:tickup/views/acccueil/home.dart';
 import 'package:tickup/views/acceuil.dart';
+import 'package:tickup/views/authentification/mise_a_jour_password_view.dart';
 import 'package:tickup/views_models/authentification/authentification_viewmodel.dart';
+import 'package:tickup/views_models/session_manager_view_model.dart';
 
 class ConnexionView extends StatefulWidget {
   const ConnexionView({Key? key}) : super(key: key);
@@ -19,6 +23,7 @@ class ConnexionView extends StatefulWidget {
 
 class _ConnexionViewState extends State<ConnexionView> {
   bool _obscureText = true;
+  final formKey = GlobalKey<FormState>();
 
   void _togglePasswordView() {
     setState(() {
@@ -36,112 +41,110 @@ class _ConnexionViewState extends State<ConnexionView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.fourthBlue,
-      body: Consumer<AuthViewModel>(
+      body: Consumer<AuthentificationViewmodel>(
         builder: (context, authVm, child) {
-          return Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 400),
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-
-                    // Titre principal
-                    Text(
-                      "Se connecter",
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: AppColors.primaryBlue,
+          return Form(
+            key : formKey,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
-                    ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 10),
 
-                    const SizedBox(height: 8),
-
-                    // Sous texte
-                    Text(
-                      "Entrez vos informations pour accéder à votre compte",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 13,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    // Email
-                    InputText(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer votre email';
-                        }
-                        final emailRegex =
-                        RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                        if (!emailRegex.hasMatch(value)) {
-                          return 'Veuillez entrer un email valide';
-                        }
-                        return null;
-                      },
-                      controller: authVm.emailController,
-                      labelText: "Email",
-                      hintext: "exemple@email.com",
-                      obscureText: false,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Mot de passe
-                    InputText(
-                      controller: authVm.passwordController,
-                      labelText: "Mot de passe",
-                      hintext: "Saisissez votre mot de passe",
-                      obscureText: _obscureText,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.grey,
+                      // Titre principal
+                      Text(
+                        "Se connecter",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: AppColors.primaryBlue,
                         ),
-                        onPressed: _togglePasswordView,
                       ),
-                    ),
 
-                    const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                    // Mot de passe oublié
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Mot de passe oublié ?',
-                          style:
-                          Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 13,
-                            color: AppColors.primaryBlue,
-                            fontWeight: FontWeight.w600,
+                      // Sous texte
+                      Text(
+                        "Entrez vos informations pour accéder à votre compte",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 13,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      // Email
+                      InputText(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Veuillez entrer votre login';
+                          }
+
+                        },
+                        controller: authVm.loginController,
+                        labelText: "Login",
+                        hintext: "Saisissez votre login",
+                        obscureText: false,
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Mot de passe
+                      InputText(
+                        controller: authVm.passwordController,
+                        labelText: "Mot de passe",
+                        hintext: "Saisissez votre mot de passe",
+                        obscureText: _obscureText,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                          onPressed: _togglePasswordView,
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // Mot de passe oublié
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Mot de passe oublié ?',
+                            style:
+                            Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 13,
+                              color: AppColors.primaryBlue,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 10),
-                  ],
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -155,57 +158,73 @@ class _ConnexionViewState extends State<ConnexionView> {
           child: PrimaryButton(
             title: "Se connecter",
             onPressed: () async {
-              final viewModel = Provider.of<AuthViewModel>(
-                context,
-                listen: false,
-              );
-
-              final email = viewModel.emailController.text.trim();
-              final password = viewModel.passwordController.text.trim();
-
-              if (viewModel.emailController.text.isEmpty || viewModel.passwordController.text.isEmpty) {
+              final authViewModel = Provider.of<AuthentificationViewmodel>(context, listen: false);
+              final sessionManagerViewModel = Provider.of<SessionManagerViewModel>(context, listen: false);
+              if (authViewModel.loginController.text.trim().isEmpty || authViewModel.passwordController.text.trim().isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("Veuillez remplir tous les champs obligatoires"),
+                    content: Text("Le login et le mot de passe sont requis"),
                     backgroundColor: Colors.red,
                   ),
                 );
-                return;
-              }
-
-              if (!viewModel.emailRegex.hasMatch(email)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Adresse email invalide"),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-                return;
-              }
-
-              showLoadingSession(context);
+                return;              }
+              if (!formKey.currentState!.validate()) return;
 
               try {
-                await viewModel.seConnecter(email, password);
+                //  Afficher loader
+                showLoadingSession(context);
 
-                Navigator.pop(context);
+                final AuthData? authData = await authViewModel.seConnecter();
 
-                await Navigator.push(
+                if (!mounted) return;
+                Navigator.of(context, rootNavigator: true).pop();
+                if (authData == null) return;
+
+                //  Première connexion → rediriger vers changement de mot de passe
+                if (authData.isFisrtConnection == true) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MiseAJourPasswordView(
+                        // login: authViewModel.loginController.text,
+                        // refMarchand: authData.refMarchent, // si nécessaire pour la mise à jour
+                      ),
+                    ),
+                  );
+                  return; // ne pas continuer vers l'accueil
+                }
+
+                //  Connexion normale
+                sessionManagerViewModel.authenticated();
+
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const Acceuil(),
+                    builder: (_) => const Home(),
+                  ),
+                );
+              } on AppException catch (e) {
+                if (mounted && Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(e.message),
+                    backgroundColor: Colors.red,
                   ),
                 );
               } catch (e) {
-                Navigator.pop(context);
+                if (mounted && Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Une erreur est survenue lors de l'enrôlement."),
+                  SnackBar(
+                    content: Text("Une erreur est survenue"),
                     backgroundColor: Colors.red,
                   ),
                 );
-                debugPrint("Erreur lors de le connexion : $e");
               }
             },
           ),

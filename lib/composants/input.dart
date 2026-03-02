@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tickup/ressources/const/app_colors.dart';
 
 class InputText extends StatefulWidget {
@@ -7,16 +8,24 @@ class InputText extends StatefulWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
   final FormFieldValidator<String>? validator;
+  final String? prefixText;
+  final TextStyle? prefixStyle;
 
   const InputText({
     Key? key,
     required this.labelText,
     this.obscureText = false,
     this.controller,
+    this.keyboardType,
+    this.inputFormatters,
     this.validator,
     this.suffixIcon,
     this.hintext,
+    this.prefixText,
+    this.prefixStyle,
   }) : super(key: key);
 
   @override

@@ -1,10 +1,11 @@
-import 'package:tickup/models/customer_model.dart';
+
+import 'package:tickup/models/user_connected.dart';
 
 class GenuisPayRequest {
   double? amount;
   String? description;
   String? currency;
-  Customer? customer;
+  UserConnected? customer;
   String? successUrl;
 
   GenuisPayRequest({

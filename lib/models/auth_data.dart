@@ -1,25 +1,32 @@
 class AuthData {
-  final String token;
-  final String refreshToken;
-  final int expiresIn;
+  String? accessToken;
+  String? refreshToken;
+  int? expiresIn;
+  String? refUsager;
+  bool? isFisrtConnection;
 
   AuthData(
-      {required this.token,
-        required this.refreshToken,
-        required this.expiresIn});
+      {this.accessToken,
+        this.refreshToken,
+        this.expiresIn,
+        this.refUsager,
+        this.isFisrtConnection});
 
-  factory AuthData.fromJson(Map<String, dynamic> json) {
-    print("token: $json");
-    return AuthData(
-      token: json['accessToken'],
-      refreshToken: json['refreshToken'],
-      expiresIn: json['expiresIn'],
-    );
+  AuthData.fromJson(Map<String, dynamic> json) {
+    accessToken = json['accessToken'];
+    refreshToken = json['refreshToken'];
+    expiresIn = json['expiresIn'];
+    refUsager = json['refUsager'];
+    isFisrtConnection = json['isFisrtConnection'];
   }
 
-  Map<String, dynamic> toJson() => {
-    'accessToken': token,
-    'refreshToken': refreshToken,
-    'expiresIn': expiresIn
-  };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['accessToken'] = this.accessToken;
+    data['refreshToken'] = this.refreshToken;
+    data['expiresIn'] = this.expiresIn;
+    data['refUsager'] = this.refUsager;
+    data['isFisrtConnection'] = this.isFisrtConnection;
+    return data;
+  }
 }

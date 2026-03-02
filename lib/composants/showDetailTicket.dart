@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tickup/views_models/evenements/evenement_viewmodel.dart';
-import 'package:tickup/views_models/paiements/paiement_pro_view_model.dart';
+import 'package:tickup/views_models/paiements/paiement_view_model.dart';
 
 import '../models/enum/type_ticket.dart';
 

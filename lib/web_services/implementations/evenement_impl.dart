@@ -15,7 +15,7 @@ class EvenementImpl extends EvenementService {
   Future<List<EvenementModel>> getAllEvenements() async {
     try {
       final response = await dioClient.dio.get(
-        "$baseUrl/events");
+        "$baseUrlbackend/events");
 
       print("Response DIO ::::::::::: ${response.data}");
       print("Statut DIO ::::::::::::${response.statusCode}");
