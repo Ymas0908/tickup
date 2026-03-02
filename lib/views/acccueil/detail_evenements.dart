@@ -30,7 +30,7 @@ class _DetailEvenementsState extends State<DetailEvenements> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              evenement.title ?? '',
+              evenement.nom ?? '',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold
@@ -45,21 +45,21 @@ class _DetailEvenementsState extends State<DetailEvenements> {
               children: [
                 Stack(
                   children: [
-                    // Image.network(
-                    //   evenement.urlImage.toString(),
-                    //   width: double.infinity,
-                    //   height: 300,
-                    //   fit: BoxFit.cover,
-                    // ),
-                    // Image.network(
-                    //   evenement.urlImage.toString(),
-                    //   height: 300,
-                    //   width: double.infinity,
-                    //   fit: BoxFit.cover,
-                    //   errorBuilder: (context, error, stackTrace) => Center(
-                    //     child: const Icon(Icons.image_not_supported, size: 300),
-                    //   ),
-                    // ),
+                    Image.network(
+                      evenement.urlImage.toString(),
+                      width: double.infinity,
+                      height: 300,
+                      fit: BoxFit.cover,
+                    ),
+                    Image.network(
+                      evenement.urlImage.toString(),
+                      height: 300,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Center(
+                        child: const Icon(Icons.image_not_supported, size: 300),
+                      ),
+                    ),
                   ],
                 ),
 
@@ -81,7 +81,7 @@ class _DetailEvenementsState extends State<DetailEvenements> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            evenement.date ?? "",
+                            formatDateTime(evenement.dateHeureEvenement),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -138,7 +138,7 @@ class _DetailEvenementsState extends State<DetailEvenements> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        evenement.venue?.name ?? "",
+                        evenement.lieu ?? "",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500
                         ),

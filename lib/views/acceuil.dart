@@ -43,7 +43,7 @@ class _AcceuilViewState extends State<AcceuilView> {
 
   // Les différentes pages correspondant à chaque onglet
   final List<Widget> _pages = [
-    const ProfilView(),
+    const Home(),
     const TicketsView(),
     // const ClientsView(),
     // const CompteView(),

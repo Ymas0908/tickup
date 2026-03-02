@@ -81,7 +81,7 @@ class _ProfilViewState extends State<ProfilView> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ConnexionView(),
+                            builder: (_) => const ConnexionView2(),
                           ),
                               (route) => false,
                         );

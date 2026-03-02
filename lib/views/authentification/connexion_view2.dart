@@ -14,14 +14,14 @@ import 'package:tickup/views/authentification/mise_a_jour_password_view.dart';
 import 'package:tickup/views_models/authentification/authentification_viewmodel.dart';
 import 'package:tickup/views_models/session_manager_view_model.dart';
 
-class ConnexionView extends StatefulWidget {
-  const ConnexionView({Key? key}) : super(key: key);
+class ConnexionView2 extends StatefulWidget {
+  const ConnexionView2({Key? key}) : super(key: key);
 
   @override
-  State<ConnexionView> createState() => _ConnexionViewState();
+  State<ConnexionView2> createState() => _ConnexionView2State();
 }
 
-class _ConnexionViewState extends State<ConnexionView> {
+class _ConnexionView2State extends State<ConnexionView2> {
   bool _obscureText = true;
   final formKey = GlobalKey<FormState>();
 
@@ -40,6 +40,10 @@ class _ConnexionViewState extends State<ConnexionView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.fourthBlue,
+        title: const Text("Se connecter"),
+      ),
       backgroundColor: AppColors.fourthBlue,
       body: Consumer<AuthentificationViewmodel>(
         builder: (context, authVm, child) {

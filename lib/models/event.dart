@@ -1,70 +1,58 @@
-import 'package:tickup/models/enum/type_evenement.dart';
-
-import 'enum/type_ticket.dart';
-
 class EvenementModel {
   String? sId;
-  String? nom;
-  String? libelle;
+  String? title;
   String? description;
-  DateTime? dateHeureEvenement;
-  TypeEvenement? typeEvenement;
-  TypeTicket? typeTicket;
-  String? prixTicketGP;
-  String? prixTicketVIP;
-  String? prixTicketVVIP;
-  String? lieu;
-  String? urlImage;
-  
-
-
+  String? date;
+  Venue? venue;
+  Category? category;
+  Organizer? organizer;
+  bool? isApproved;
+  int? iV;
 
   EvenementModel(
       {this.sId,
-        this.nom,
-        this.libelle,
+        this.title,
         this.description,
-        this.dateHeureEvenement,
-        this.lieu,
-        this.urlImage,
-        this.typeEvenement,
-        this.typeTicket,
-        this.prixTicketGP,
-        this.prixTicketVIP,
-        this.prixTicketVVIP,
-      });
+        this.date,
+        this.venue,
+        this.category,
+        this.organizer,
+        this.isApproved,
+        this.iV});
 
   EvenementModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    nom = json['nom'];
-    libelle = json['libelle'];
+    title = json['title'];
     description = json['description'];
-    dateHeureEvenement = json['dateHeureEvenement'];
-    lieu = json['lieu'];
-    urlImage = json['urlImage'];
-    typeEvenement = json['typeEvenement'];
-    typeTicket = json['typeTicket'];
-    prixTicketGP = json['prixTicketGP'];
-    prixTicketVIP = json['prixTicketVIP'];
-    prixTicketVVIP = json['prixTicketVVIP'];
-   
+    date = json['date'];
+    venue = json['venue'] != null ? new Venue.fromJson(json['venue']) : null;
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
+    organizer = json['organizer'] != null
+        ? new Organizer.fromJson(json['organizer'])
+        : null;
+    isApproved = json['isApproved'];
+    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
-    data['libelle'] = this.libelle;
-    data['nom'] = this.nom;
+    data['title'] = this.title;
     data['description'] = this.description;
-    data['dateHeureEvenement'] = this.dateHeureEvenement;
-    data['lieu'] = this.lieu;
-    data['urlImage'] = this.urlImage;
-    data['typeEvenement'] = this.typeEvenement;
-    data['typeTicket'] = this.typeTicket;
-    data['prixTicketGP'] = this.prixTicketGP;
-    data['prixTicketVIP'] = this.prixTicketVIP;
-    data['prixTicketVVIP'] = this.prixTicketVVIP;
-    
+    data['date'] = this.date;
+    if (this.venue != null) {
+      data['venue'] = this.venue!.toJson();
+    }
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
+    }
+    if (this.organizer != null) {
+      data['organizer'] = this.organizer!.toJson();
+    }
+    data['isApproved'] = this.isApproved;
+    data['__v'] = this.iV;
     return data;
   }
 }

@@ -162,7 +162,7 @@ class _MiseAJourPasswordViewState extends State<MiseAJourPasswordView> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const ConnexionView(),
+                    builder: (_) => const ConnexionView2(),
                   ),
                       (route) => false,
                 );

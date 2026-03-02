@@ -47,7 +47,7 @@ class CardEvenement extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  "",
+                  evenementModel.urlImage ?? "",
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
@@ -71,7 +71,7 @@ class CardEvenement extends StatelessWidget {
                 children: [
                   /// TITRE (juste en bas de l'image)
                   AutoSizeText(
-                    evenementModel.title ?? "",
+                    evenementModel.nom ?? "",
                     maxLines: 2,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
@@ -93,7 +93,7 @@ class CardEvenement extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          "${evenementModel.date} • ${evenementModel.venue?.name ?? ''}",
+                          "${evenementModel.dateHeureEvenement} • ${evenementModel.lieu ?? ''}",
                           style: GoogleFonts.montserrat(
                             fontSize: 12,
                             color: Colors.grey.shade700,

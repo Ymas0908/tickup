@@ -212,7 +212,7 @@ class _InscriptionViewState extends State<InscriptionView> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ConnexionView(
+                      builder: (_) => ConnexionView2(
                         // login: authViewModel.loginController.text,
                         // refMarchand: authData.refMarchent, // si nécessaire pour la mise à jour
                       ),

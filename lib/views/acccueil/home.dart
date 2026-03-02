@@ -11,6 +11,9 @@ import 'package:tickup/ressources/const/app_colors.dart';
 import 'package:tickup/views/acccueil/detail_evenements.dart';
 import 'package:tickup/views_models/evenements/evenement_viewmodel.dart';
 
+import '../../utils/theme_provider.dart';
+import '../profil_view.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -20,13 +23,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final TextEditingController _searchController = TextEditingController();
+  int _currentIndex = 0;
+
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = Provider.of<EvenementViewModel>(context, listen: false);
-      viewModel.getAllEvenements();
+      viewModel.getEvents();
     });
   }
 
@@ -38,8 +43,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
+
     return Scaffold(
       backgroundColor: const Color(0xfff6f6f8),
+      drawer: const ProfilView(),
       body: SafeArea(
         child: Consumer<EvenementViewModel>(
           builder: (context, evenementVm, child) {
@@ -215,7 +224,7 @@ class _HomeState extends State<Home> {
                             )
                           : RefreshIndicator(
                               onRefresh: () async {
-                                await evenementVm.getAllEvenements();
+                                 evenementVm.getEvents();
                               },
                               child: GridView.builder(
                                 padding: const EdgeInsets.only(bottom: 20),
@@ -261,6 +270,99 @@ class _HomeState extends State<Home> {
           },
         ),
       ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Onglet Accueil
+              GestureDetector(
+                onTap: () => setState(() => _currentIndex = 0),
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: _currentIndex == 0
+                        ? AppColors.primaryBlue.withOpacity(0.1)
+                        : Colors.transparent,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.home_outlined,
+                        color: _currentIndex == 0
+                            ? AppColors.primaryBlue
+                            : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade500),
+                        size: 24,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Accueil",
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: _currentIndex == 0
+                              ? AppColors.primaryBlue
+                              : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600),
+                          fontWeight: _currentIndex == 0 ? FontWeight.w600 : FontWeight.normal,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Onglet Paramètres
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const ProfilView();
+                  },));
+                },
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: _currentIndex == 1
+                        ? AppColors.primaryBlue.withOpacity(0.1)
+                        : Colors.transparent,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.settings,
+                        color: _currentIndex == 1
+                            ? AppColors.primaryBlue
+                            : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade500),
+                        size: 24,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Paramètres",
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: _currentIndex == 1
+                              ? AppColors.primaryBlue
+                              : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600),
+                          fontWeight: _currentIndex == 1 ? FontWeight.w600 : FontWeight.normal,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Les autres onglets sont commentés mais si vous les décommentez,
+              // ils devront aussi être adaptés au mode sombre
+            ],
+          ),
+        ),
+      ),
+
     );
   }
 
