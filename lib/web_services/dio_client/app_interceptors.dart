@@ -23,7 +23,7 @@ class AppInterceptors extends Interceptor {
       //  Récupérer le token JWT depuis le stockage sécurisé
       String? token = await storage.read(key: 'auth_token');
 
-      if (token != null && token.isNotEmpty) {
+      if (token != null && token.isNotEmpty && !options.path.contains("/auth/users/login")) {
         options.headers['Authorization'] = 'Bearer $token';
       }
     } catch (e) {
