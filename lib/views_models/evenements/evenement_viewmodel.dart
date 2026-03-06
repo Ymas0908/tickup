@@ -107,6 +107,20 @@ class EvenementViewModel extends ChangeNotifier {
   void getEvents() {
     evenements = [
       EvenementModel(
+        nom: "TRK EN CONCERT",
+        urlImage: "https://cdn.tikerama.com/6442/conversions/trk-en-concert-69876e541f3df-1770483325-1770483864-thumbnail.jpg",
+        libelle: "TRK",
+        description: "PREMIÈRE HISTORIQUE \n Pour la toute première fois, TRK, le GOLDEN BOY , monte sur scène pour son premier concert officiel. \n Talent brut, énergie unique, ascension fulgurante : un show mémorable pour marquer le début d’un parcours doré. \n Sois témoin du premier chapitre du GOLDEN BOY ✨.",
+        lieu: "Sofitel Abidjan Hotel Ivoire, Boulevard Hassan II, Abidjan, Côte d'Ivoire",
+        prixTicketGP: "EPUISE",
+        prixTicketVIP: "EPUISE",
+        prixTicketVVIP: "50.000 F CFA",
+        dateHeureEvenement: DateTime(2026, 7, 18, 15, 0), // 5 septembre 2024, 19h00
+        // dateHeureCreation: DateTime(2024, 3, 1, 10, 0), // 1 mars 2024, 10h00
+        typeEvenement: TypeEvenement.CONCERT,
+      ),
+
+      EvenementModel(
         nom: "Concert de Clara Dubois",
         urlImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuBsg7owyK05DTvSuZ2UXZFni7gtb3SZawsnFJtWYg9GW1TZq06lnF_ymNq3KkccMQv_hsbotHtwjywO52JcNdajEIZbZGlwQDFArULLJsvA4nztUDJZsLZTklqbp6_wQiW4Gk2P3R763JFvpV-x24sxeKKIIURT43YZu--KGA7aSvo_c8eAADE_d-vY2dc-FCkfSJtp6NKy71f7-Tess7RzoXB5HW2xxvP41SM3_xfyKVq_EMh-JAnbhEJ7LjNiF1wF6J6q2BIj9baq",
         libelle: "Concert exclusif",
@@ -119,7 +133,6 @@ class EvenementViewModel extends ChangeNotifier {
         // dateHeureCreation: DateTime(2024, 1, 15, 10, 0), // 15 janvier 2024, 10h00
         typeEvenement: TypeEvenement.CONCERT,
       ),
-
       EvenementModel(
         nom: "Paris vs Lyon - Grande rencontre",
         urlImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuAh194KmIqnkSmqQ9NkeWxmafk8YATwaDQLSDleZm8URp2p-T-Kp_r9ziM_EV4ZbnfU1HXVsbU8R-2ItSFZduHMzkTB1qqkTvlyZObFcyfXT7f4b5wayns3iIBXKGtKg7uKQp6fCs4XCzZl4zvKrPkBmChSWSlR4wgrxL9TJQwtkxVl2LN1bzL5QjQk8WESBExkW0jKXiUjNr4llTE0qfHz-P29qMc9MEZg3UlouIvdv7-67yJsH1P4h9hPhhKIC6XbjxvzDm9YKeNI",
@@ -133,7 +146,6 @@ class EvenementViewModel extends ChangeNotifier {
        // dateHeureCreation: DateTime(2024, 2, 1, 15, 0), // 1 février 2024, 15h00
         typeEvenement: TypeEvenement.MATCH,
       ),
-
       EvenementModel(
         nom: "Exposition d'art contemporain",
         urlImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuDGUb1xKEd3W-TbxZeP7Qs4Idkx6pMdKE1QJn1UYTyQwqQEE2SlG161lnSD47Cfrh1aiT2wgCNflMWKTb2wjQGfLuzgdNzqkr5OGkzowPjBEQbfULMoOMKnTKaIesFC9kGTe0JX4Qo-hay9YuSmsujKVGRwakCKpqcCWfvyoE2Z6L74-IFT-teBzaDslfgtSeDva98BeR69lWsPbP-cBjOcSAyNj38YejklfaJqmLLx4KNhI0RL4J1HgfGWiVFkRtZR2V47IUSgi0Mp",
@@ -147,7 +159,6 @@ class EvenementViewModel extends ChangeNotifier {
        // dateHeureCreation: DateTime(2024, 2, 1, 15, 0), // 1 février 2024, 15h00
         typeEvenement: TypeEvenement.EXPOSITION,
       ),
-
       EvenementModel(
         nom: "Le Misanthrope",
         urlImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -161,7 +172,6 @@ class EvenementViewModel extends ChangeNotifier {
        // dateHeureCreation: DateTime(2024, 2, 1, 15, 0), // 1 février 2024, 15h00
         typeEvenement: TypeEvenement.THEATRE,
       ),
-
       EvenementModel(
         nom: "Festival de Jazz International",
         urlImage: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -175,9 +185,6 @@ class EvenementViewModel extends ChangeNotifier {
        // dateHeureCreation: DateTime(2024, 2, 1, 15, 0), // 1 février 2024, 15h00
         typeEvenement: TypeEvenement.FESTIVAL,
       ),
-
-
-
       EvenementModel(
         nom: "Première du film 'Renaissance'",
         urlImage: "https://images.unsplash.com/photo-1489599809516-9827b6d1cf13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -206,7 +213,7 @@ class EvenementViewModel extends ChangeNotifier {
       filteredEvenements = evenements;
     } else {
       filteredEvenements = evenements.where((evenenemet) {
-        final fullName = "${evenenemet.libelle}".toLowerCase();
+        final fullName = "${evenenemet.nom}".toLowerCase();
         return fullName.contains(query.toLowerCase());
       }).toList();
     }

@@ -45,12 +45,12 @@ class _DetailEvenementsState extends State<DetailEvenements> {
               children: [
                 Stack(
                   children: [
-                    Image.network(
-                      evenement.urlImage.toString(),
-                      width: double.infinity,
-                      height: 300,
-                      fit: BoxFit.cover,
-                    ),
+                    // Image.network(
+                    //   evenement.urlImage.toString(),
+                    //   width: double.infinity,
+                    //   height: 300,
+                    //   fit: BoxFit.cover,
+                    // ),
                     Image.network(
                       evenement.urlImage.toString(),
                       height: 300,

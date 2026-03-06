@@ -8,7 +8,8 @@ String genuisPayurl = 'https://pay.genius.ci/api/v1/merchant';
 String get baseUrlbackend {
   if (Platform.isAndroid) {
     // Pour Android émulateur, 10.0.2.2 pointe vers le localhost de la machine hôte
-    return 'http://10.0.2.2:9000/api/v1';
+    // return 'http://10.0.2.2:9000/api/v1';
+    return 'http://192.168.30.12:9000/api/v1';
   } else {
     // Pour iOS simulator, web, et autres plateformes
     return 'http://localhost:9000/api/v1';

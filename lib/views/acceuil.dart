@@ -19,37 +19,10 @@ class AcceuilView extends StatefulWidget {
 class _AcceuilViewState extends State<AcceuilView> {
   int _currentIndex = 0;
 
-  @override
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final authViewModel = Provider.of<AuthentificationViewmodel>(context, listen: false);
-
-      // //  Récupérer les infos d'authentification stockées
-      // final AuthData? authData = await authViewModel.seConnecter();
-      // if (authData?.isFisrtConnection == true) {
-      //   _showGarderLeControleBottomSheet();
-      //   return;
-      // }
-
-    });
-  }
-
-  // void _showGarderLeControleBottomSheet() {
-  //   showResponsiveBottomSheet(context, MessageAcceuil());
-  // }
-
-  // Les différentes pages correspondant à chaque onglet
   final List<Widget> _pages = [
     const Home(),
     const TicketsView(),
-    // const ClientsView(),
-    // const CompteView(),
-    // const InstrumentsPaimentView(),
     const ProfilView(),
-    // const TransactionsView(),
   ];
 
   @override
@@ -59,94 +32,91 @@ class _AcceuilViewState extends State<AcceuilView> {
 
     return Scaffold(
       backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
-      body: _pages[_currentIndex],
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              // Onglet Accueil
-              GestureDetector(
-                onTap: () => setState(() => _currentIndex = 0),
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: _currentIndex == 0
-                        ? AppColors.primaryBlue.withOpacity(0.1)
-                        : Colors.transparent,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.home_outlined,
-                        color: _currentIndex == 0
-                            ? AppColors.primaryBlue
-                            : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade500),
-                        size: 24,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "Accueil",
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: _currentIndex == 0
-                              ? AppColors.primaryBlue
-                              : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600),
-                          fontWeight: _currentIndex == 0 ? FontWeight.w600 : FontWeight.normal,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Onglet Paramètres
-              GestureDetector(
-                onTap: () => setState(() => _currentIndex = 1),
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: _currentIndex == 1
-                        ? AppColors.primaryBlue.withOpacity(0.1)
-                        : Colors.transparent,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.settings,
-                        color: _currentIndex == 1
-                            ? AppColors.primaryBlue
-                            : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade500),
-                        size: 24,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "Paramètres",
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: _currentIndex == 1
-                              ? AppColors.primaryBlue
-                              : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600),
-                          fontWeight: _currentIndex == 1 ? FontWeight.w600 : FontWeight.normal,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Les autres onglets sont commentés mais si vous les décommentez,
-              // ils devront aussi être adaptés au mode sombre
-            ],
+      body: Column(
+        children: [
+          /// PAGE
+          Expanded(
+            child: _pages[_currentIndex],
           ),
-        ),
+
+          /// BARRE DE NAVIGATION
+          SafeArea(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                  )
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildNavItem(
+                    index: 0,
+                    icon: Icons.home_outlined,
+                    label: "Accueil",
+                    isDarkMode: isDarkMode,
+                  ),
+                  _buildNavItem(
+                    index: 1,
+                    icon: Icons.confirmation_number_outlined,
+                    label: "Tickets",
+                    isDarkMode: isDarkMode,
+                  ),
+                  _buildNavItem(
+                    index: 2,
+                    icon: Icons.person_outline,
+                    label: "Profil",
+                    isDarkMode: isDarkMode,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required String label,
+    required bool isDarkMode,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 24,
+            color: _currentIndex == index
+                ? AppColors.primaryBlue
+                : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade500),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight:
+              _currentIndex == index ? FontWeight.w600 : FontWeight.normal,
+              color: _currentIndex == index
+                  ? AppColors.primaryBlue
+                  : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tickup/ressources/const/app_theme.dart';
 import 'package:tickup/utils/app_route_name.dart';
 import 'package:tickup/utils/generator_route.dart';
+import 'package:tickup/utils/langue_provider.dart';
 import 'package:tickup/utils/theme_provider.dart';
 import 'package:tickup/views/acccueil/home.dart';
 import 'package:tickup/views/authentification/connexion_view.dart';
@@ -17,10 +18,12 @@ import 'package:tickup/web_services/implementations/authentification/auth_servic
 import 'package:tickup/web_services/implementations/authentification/usager_impl.dart';
 import 'package:tickup/web_services/implementations/evenement_impl.dart';
 import 'package:tickup/web_services/implementations/paiement_impl.dart';
+import 'package:tickup/web_services/services/app_info_service.dart';
 import 'package:tickup/web_services/services/auth_service.dart';
 import 'package:tickup/web_services/services/local_auth_service.dart';
 
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final appInfoService = AppInfoService();
 void main() {
   runApp(const MyApp());
 }
@@ -52,6 +55,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
         Provider<LocalAuthService>(create: (_) => LocalAuthService()),
         ChangeNotifierProvider(create: (_) => SessionManagerViewModel(),
         ),
