@@ -73,8 +73,7 @@ class AuthentificationViewmodel extends ChangeNotifier {
       // Récupérer les infos du marchand après login
       await getUserMarchand();
       customLogger.i(
-        "Connexion réussie pour l'utilisateur: ${userConnected?.toString()}",
-      );
+        "Connexion réussie pour l'utilisateur: ${userConnected?.prenom ?? ''} ${userConnected?.nom ?? ''}",      );
 
       return authData;
     } catch (e) {

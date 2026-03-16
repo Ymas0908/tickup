@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<EvenementViewModel>(context, listen: false).getEvents();
+      Provider.of<EvenementViewModel>(context, listen: false).getAllEvenements();
     });
   }
 
@@ -130,7 +130,7 @@ class _HomeState extends State<Home> {
           builder: (context, evenementVm, child) {
             return RefreshIndicator(
               onRefresh: () async {
-                evenementVm.getEvents();
+                evenementVm.getAllEvenements();
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +186,7 @@ class _HomeState extends State<Home> {
                           contentPadding: EdgeInsets.symmetric(vertical: 15),
                         ),
                         onChanged: (value) {
-                          evenementVm.updateSearchQueryEvenement(value);
+                          // evenementVm.updateSearchQueryEvenement(value);
                         },
                       ),
                     ),

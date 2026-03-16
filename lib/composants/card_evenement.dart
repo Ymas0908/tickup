@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tickup/models/evenement_model.dart';
 import 'package:tickup/ressources/utils/format_date.dart';
 
@@ -47,7 +48,7 @@ class CardEvenement extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  evenementModel.urlImage ?? "",
+                  evenementModel.imageUrl ?? "",
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
@@ -71,7 +72,7 @@ class CardEvenement extends StatelessWidget {
                 children: [
                   /// TITRE (juste en bas de l'image)
                   AutoSizeText(
-                    evenementModel.nom ?? "",
+                    evenementModel.title ?? "",
                     maxLines: 2,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
@@ -93,15 +94,33 @@ class CardEvenement extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          "${evenementModel.dateHeureEvenement} • ${evenementModel.lieu ?? ''}",
+                          "${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(evenementModel.date.toString()))} \n ${evenementModel.venue?.name ?? ''}",
                           style: GoogleFonts.montserrat(
                             fontSize: 12,
                             color: Colors.grey.shade700,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        ),
+                        ),                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 14,
+                        color: Colors.grey.shade600,
                       ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: AutoSizeText(
+                          "${evenementModel.venue?.name ?? ''}",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            color: Colors.grey.shade700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),                      ),
                     ],
                   ),
                 ],

@@ -34,7 +34,7 @@ class PaiementViewModel extends ChangeNotifier {
       );
 
       final response = await paiementService.initierPaiement(request);
-      customLogger.e(response);
+      customLogger.i(response.data?.toString());
 
       // 1. Vérification de la réponse
       if (response.success == true && response.data != null) {

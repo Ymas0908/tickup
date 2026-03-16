@@ -1,70 +1,73 @@
-import 'package:tickup/models/enum/type_evenement.dart';
-
-import 'enum/type_ticket.dart';
-
 class EvenementModel {
   String? sId;
-  String? nom;
-  String? libelle;
+  String? title;
   String? description;
-  DateTime? dateHeureEvenement;
-  TypeEvenement? typeEvenement;
-  TypeTicket? typeTicket;
-  String? prixTicketGP;
-  String? prixTicketVIP;
-  String? prixTicketVVIP;
-  String? lieu;
-  String? urlImage;
-  
-
-
+  String? date;
+  Venue? venue;
+  Category? category;
+  Organizer? organizer;
+  List<Tickets>? tickets;
+  bool? isApproved;
+  String? imageUrl;
+  int? iV;
 
   EvenementModel(
       {this.sId,
-        this.nom,
-        this.libelle,
+        this.title,
         this.description,
-        this.dateHeureEvenement,
-        this.lieu,
-        this.urlImage,
-        this.typeEvenement,
-        this.typeTicket,
-        this.prixTicketGP,
-        this.prixTicketVIP,
-        this.prixTicketVVIP,
-      });
+        this.date,
+        this.venue,
+        this.category,
+        this.organizer,
+        this.tickets,
+        this.isApproved,
+        this.imageUrl,
+        this.iV});
 
   EvenementModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    nom = json['nom'];
-    libelle = json['libelle'];
+    title = json['title'];
     description = json['description'];
-    dateHeureEvenement = json['dateHeureEvenement'];
-    lieu = json['lieu'];
-    urlImage = json['urlImage'];
-    typeEvenement = json['typeEvenement'];
-    typeTicket = json['typeTicket'];
-    prixTicketGP = json['prixTicketGP'];
-    prixTicketVIP = json['prixTicketVIP'];
-    prixTicketVVIP = json['prixTicketVVIP'];
-   
+    date = json['date'];
+    venue = json['venue'] != null ? new Venue.fromJson(json['venue']) : null;
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
+    organizer = json['organizer'] != null
+        ? new Organizer.fromJson(json['organizer'])
+        : null;
+    if (json['tickets'] != null) {
+      tickets = <Tickets>[];
+      json['tickets'].forEach((v) {
+        tickets!.add(new Tickets.fromJson(v));
+      });
+    }
+    isApproved = json['isApproved'];
+    imageUrl = json['imageUrl'];
+    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
-    data['libelle'] = this.libelle;
-    data['nom'] = this.nom;
+    data['title'] = this.title;
     data['description'] = this.description;
-    data['dateHeureEvenement'] = this.dateHeureEvenement;
-    data['lieu'] = this.lieu;
-    data['urlImage'] = this.urlImage;
-    data['typeEvenement'] = this.typeEvenement;
-    data['typeTicket'] = this.typeTicket;
-    data['prixTicketGP'] = this.prixTicketGP;
-    data['prixTicketVIP'] = this.prixTicketVIP;
-    data['prixTicketVVIP'] = this.prixTicketVVIP;
-    
+    data['date'] = this.date;
+    if (this.venue != null) {
+      data['venue'] = this.venue!.toJson();
+    }
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
+    }
+    if (this.organizer != null) {
+      data['organizer'] = this.organizer!.toJson();
+    }
+    if (this.tickets != null) {
+      data['tickets'] = this.tickets!.map((v) => v.toJson()).toList();
+    }
+    data['isApproved'] = this.isApproved;
+    data['imageUrl'] = this.imageUrl;
+    data['__v'] = this.iV;
     return data;
   }
 }
@@ -73,31 +76,13 @@ class Venue {
   String? sId;
   String? name;
   String? address;
-  String? city;
-  String? country;
-  int? capacity;
-  String? createdAt;
-  int? iV;
 
-  Venue(
-      {this.sId,
-        this.name,
-        this.address,
-        this.city,
-        this.country,
-        this.capacity,
-        this.createdAt,
-        this.iV});
+  Venue({this.sId, this.name, this.address});
 
   Venue.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
     address = json['address'];
-    city = json['city'];
-    country = json['country'];
-    capacity = json['capacity'];
-    createdAt = json['createdAt'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
@@ -105,11 +90,6 @@ class Venue {
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['address'] = this.address;
-    data['city'] = this.city;
-    data['country'] = this.country;
-    data['capacity'] = this.capacity;
-    data['createdAt'] = this.createdAt;
-    data['__v'] = this.iV;
     return data;
   }
 }
@@ -117,27 +97,18 @@ class Venue {
 class Category {
   String? sId;
   String? name;
-  String? description;
-  String? createdAt;
-  int? iV;
 
-  Category({this.sId, this.name, this.description, this.createdAt, this.iV});
+  Category({this.sId, this.name});
 
   Category.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
-    description = json['description'];
-    createdAt = json['createdAt'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     data['name'] = this.name;
-    data['description'] = this.description;
-    data['createdAt'] = this.createdAt;
-    data['__v'] = this.iV;
     return data;
   }
 }
@@ -146,28 +117,13 @@ class Organizer {
   String? sId;
   String? name;
   String? email;
-  String? password;
-  String? role;
-  String? createdAt;
-  int? iV;
 
-  Organizer(
-      {this.sId,
-        this.name,
-        this.email,
-        this.password,
-        this.role,
-        this.createdAt,
-        this.iV});
+  Organizer({this.sId, this.name, this.email});
 
   Organizer.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
     email = json['email'];
-    password = json['password'];
-    role = json['role'];
-    createdAt = json['createdAt'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
@@ -175,8 +131,49 @@ class Organizer {
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['email'] = this.email;
-    data['password'] = this.password;
-    data['role'] = this.role;
+    return data;
+  }
+}
+
+class Tickets {
+  String? sId;
+  String? event;
+  String? type;
+  int? price;
+  int? quantity;
+  int? sold;
+  String? createdAt;
+  int? iV;
+
+  Tickets(
+      {this.sId,
+        this.event,
+        this.type,
+        this.price,
+        this.quantity,
+        this.sold,
+        this.createdAt,
+        this.iV});
+
+  Tickets.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    event = json['event'];
+    type = json['type'];
+    price = json['price'];
+    quantity = json['quantity'];
+    sold = json['sold'];
+    createdAt = json['createdAt'];
+    iV = json['__v'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['event'] = this.event;
+    data['type'] = this.type;
+    data['price'] = this.price;
+    data['quantity'] = this.quantity;
+    data['sold'] = this.sold;
     data['createdAt'] = this.createdAt;
     data['__v'] = this.iV;
     return data;

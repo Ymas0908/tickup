@@ -13,7 +13,7 @@ class DioClient {
     // Configuration de base de Dio
     dio = Dio(
       BaseOptions(
-        baseUrl: "$baseUrlbackend",
+        baseUrl: baseUrlbackend,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
       ),

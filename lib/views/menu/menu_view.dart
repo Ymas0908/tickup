@@ -193,12 +193,12 @@ class MenuView extends StatelessWidget {
                                 ),
                                 trailing: const Icon(Icons.chevron_right),
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const TicketsView(),
-                                    ),
-                                  );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (_) => const TicketsView(),
+                                  //   ),
+                                  // );
                                 },
                               ),
                             ],

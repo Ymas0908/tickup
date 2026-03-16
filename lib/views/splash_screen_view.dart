@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:tickup/views/acccueil/home.dart';
 import 'package:tickup/views/on_boarding.dart';
 
 class SplashScreenView extends StatefulWidget {
@@ -17,7 +18,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
     // ⏱️ Après 3 secondes, on redirige vers la page d’onboarding
     Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-         return OnboardingView();
+         return Home();
       },));
     });
   }

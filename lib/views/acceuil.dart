@@ -21,7 +21,7 @@ class _AcceuilViewState extends State<AcceuilView> {
 
   final List<Widget> _pages = [
     const Home(),
-    const TicketsView(),
+    // const TicketsView(),
     const ProfilView(),
   ];
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tickup/composants/primary_button.dart';
 import 'package:tickup/composants/showDetailTicket.dart';
@@ -30,7 +31,7 @@ class _DetailEvenementsState extends State<DetailEvenements> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              evenement.nom ?? '',
+              evenement.title ?? '',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold
@@ -52,7 +53,7 @@ class _DetailEvenementsState extends State<DetailEvenements> {
                     //   fit: BoxFit.cover,
                     // ),
                     Image.network(
-                      evenement.urlImage.toString(),
+                      evenement.imageUrl.toString(),
                       height: 300,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -74,14 +75,14 @@ class _DetailEvenementsState extends State<DetailEvenements> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Date",
+                            "Date & Heure",
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            formatDateTime(evenement.dateHeureEvenement),
+                              DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(evenement.date.toString())),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -99,23 +100,23 @@ class _DetailEvenementsState extends State<DetailEvenements> {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          // Container(
-                          //   padding: const EdgeInsets.symmetric(
-                          //     horizontal: 10,
-                          //     vertical: 4,
-                          //   ),
-                          //   decoration: BoxDecoration(
-                          //     color: AppColors.secondaryBlue.withOpacity(0.2),
-                          //     borderRadius: BorderRadius.circular(16),
-                          //   ),
-                          //   child: Text(
-                          //     getTypeEvenement(evenement?.category!.name as TypeEvenement ) ?? "",
-                          //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          //       fontSize: 12,
-                          //       fontWeight: FontWeight.bold,
-                          //     ),
-                          //   ),
-                          // ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryBlue.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              evenement.category?.name ?? "",
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -138,7 +139,7 @@ class _DetailEvenementsState extends State<DetailEvenements> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        evenement.lieu ?? "",
+                        evenement.venue?.name ?? "",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500
                         ),
